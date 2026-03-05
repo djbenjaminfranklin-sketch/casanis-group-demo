@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Casanis Group App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #b8944f; --gold-light: #c9a96e; --gold-dark: #9a7a3c;
+      --bg: #faf9f7; --bg2: #f2f0ec; --surface: #ffffff;
+      --border: #e8e5e0; --border-light: #f0ede8;
+      --text: #1a1714; --text2: #5c564e; --text3: #8a847a; --text4: #b5b0a8;
+      --navy: #1a2340;
+    }
+    html, body {
+      background: var(--bg); margin: 0;
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--text); -webkit-font-smoothing: antialiased;
+    }
+
+    .screen {
+      display: none;
+      padding-bottom: 80px;
+    }
+    .screen.active { display: block; }
+
+    .sbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 28px 8px; font-size: 15px; font-weight: 600;
+      background: var(--bg);
+    }
+    .sbar-r { display: flex; gap: 5px; align-items: center; }
+    .sbar-r svg { width: 18px; height: 12px; fill: var(--text); }
+
+    .home-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 20px 14px;
+    }
+    .hh-logo { display: flex; align-items: center; gap: 12px; }
+    .hh-sq {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: var(--navy); display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(26,35,64,0.25);
+    }
+    .hh-sq span { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: #fff; }
+    .hh-txt .t1 {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; line-height: 1; color: var(--navy);
+    }
+    .hh-txt .t2 { font-size: 9px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-top: 2px; }
+    .hh-actions { display: flex; gap: 10px; }
+    .hh-btn {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--surface);
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .hh-btn svg { width: 20px; height: 20px; stroke: var(--text2); fill: none; stroke-width: 1.5; }
+    .hh-dot::after {
+      content: ''; position: absolute; top: 9px; right: 9px;
+      width: 7px; height: 7px; background: #ef4444; border-radius: 50%; border: 2px solid var(--surface);
+    }
+
+    .hero { margin: 0 16px; height: 150px; border-radius: 20px; overflow: hidden; position: relative; }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--navy) 0%, #2a3558 100%);
+    }
+    .hero-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 30%, rgba(201,169,110,0.2), transparent 60%);
+    }
+    .hero-inner {
+      position: relative; z-index: 2; height: 100%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 24px; color: #fff;
+    }
+    .hero-ey { font-size: 9px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .hero-h { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; line-height: 1.15; }
+    .hero-h em { font-style: italic; color: var(--gold-light); font-weight: 400; }
+    .hero-loc { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.6); }
+    .hero-loc svg { width: 12px; height: 12px; stroke: var(--gold-light); fill: none; stroke-width: 2; }
+
+    .sec-lbl {
+      padding: 20px 20px 14px; font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy);
+    }
+    .vgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; }
+    .vi {
+      display: flex; flex-direction: column; align-items: center; cursor: pointer;
+      padding: 14px 6px 12px; border-radius: 18px; background: var(--surface);
+      border: 1px solid var(--border); transition: all 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .vi:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(184,148,79,0.12); transform: translateY(-2px); }
+    .vi-img {
+      width: 80px; height: 80px; border-radius: 18px; overflow: hidden;
+      margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .vi-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .vi:hover .vi-img img { transform: scale(1.1); }
+    .vi-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .vi-name { font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 600; text-align: center; line-height: 1.2; color: var(--text); margin-bottom: 3px; }
+    .vi-tag { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+
+    .fscroll { display: flex; gap: 12px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+    .fscroll::-webkit-scrollbar { display: none; }
+    .fcard { min-width: 270px; height: 150px; border-radius: 18px; overflow: hidden; position: relative; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .fcard img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .fcard:hover img { transform: scale(1.05); }
+    .fcard-over { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, transparent 100%); }
+    .fcard-c { position: absolute; bottom: 14px; left: 16px; right: 16px; z-index: 2; color: #fff; }
+    .fcard-tag { display: inline-block; background: var(--gold); color: #fff; font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-bottom: 5px; }
+    .fcard-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; }
+    .fcard-sub { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+    .promo {
+      margin: 0 16px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer;
+      transition: all 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .promo:hover { border-color: var(--gold); }
+    .promo-ico { width: 44px; height: 44px; border-radius: 12px; background: rgba(184,148,79,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .promo-ico svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .promo-bd { flex: 1; }
+    .promo-t { font-size: 14px; font-weight: 600; }
+    .promo-s { font-size: 11px; color: var(--text3); margin-top: 1px; }
+    .promo-btn { background: var(--navy); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 8px 16px; border-radius: 10px; white-space: nowrap; }
+
+    .loyalty {
+      margin: 0 16px; padding: 14px 16px; border-radius: 16px; background: var(--surface);
+      border: 1px solid var(--border); display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .lp { text-align: center; min-width: 50px; }
+    .lp .n { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--gold); }
+    .lp .l { font-size: 8px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-top: 1px; }
+    .lsep { width: 1px; height: 34px; background: var(--border); }
+    .linfo { flex: 1; }
+    .linfo h4 { font-size: 13px; font-weight: 600; }
+    .linfo p { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+    .bnav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(250,249,247,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+      padding: 8px 8px 16px; z-index: 100;
+    }
+    .bn { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; min-width: 56px; }
+    .bn svg { width: 22px; height: 22px; stroke: var(--text4); fill: none; stroke-width: 1.5; transition: 0.25s; }
+    .bn span { font-size: 9px; font-weight: 600; color: var(--text4); transition: 0.25s; }
+    .bn.on svg { stroke: var(--navy); }
+    .bn.on span { color: var(--navy); }
+    .bn-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    .dhead { position: relative; height: 260px; overflow: hidden; }
+    .dhead img { width: 100%; height: 100%; object-fit: cover; }
+    .dhead-gradient { width: 100%; height: 100%; background-size: cover; background-position: center; }
+    .dhead-over { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(250,249,247,0.3) 50%, transparent 100%); }
+    .dhead-top { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+    .back {
+      width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back svg { width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2; }
+    .dhead-info { position: absolute; bottom: 16px; left: 20px; right: 20px; z-index: 5; }
+    .dhi-tag { display: inline-block; background: var(--gold); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 12px; border-radius: 8px; margin-bottom: 8px; }
+    .dhi-name { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--navy); }
+    .dhi-sub { font-size: 13px; color: var(--text2); margin-top: 6px; }
+
+    .dbody { padding: 16px 16px 20px; }
+    .dinfo-row { display: flex; gap: 10px; margin-bottom: 18px; }
+    .dinfo-item { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 12px 8px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
+    .dinfo-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold); }
+    .dinfo-lbl { font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+    .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mi {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 18px 14px; cursor: pointer; transition: all 0.25s;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .mi:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(184,148,79,0.1); transform: translateY(-2px); }
+    .mi-ico { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
+    .mi-ico svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; }
+    .mi-l { font-size: 13px; font-weight: 600; }
+    .mi-d { font-size: 10px; color: var(--text3); line-height: 1.3; }
+    .mc1 .mi-ico{background:rgba(184,148,79,0.1)}.mc1 .mi-ico svg{stroke:var(--gold)}
+    .mc2 .mi-ico{background:rgba(34,197,94,0.08)}.mc2 .mi-ico svg{stroke:#22c55e}
+    .mc3 .mi-ico{background:rgba(59,130,246,0.08)}.mc3 .mi-ico svg{stroke:#3b82f6}
+    .mc4 .mi-ico{background:rgba(236,72,153,0.08)}.mc4 .mi-ico svg{stroke:#ec4899}
+    .mc5 .mi-ico{background:rgba(245,158,11,0.08)}.mc5 .mi-ico svg{stroke:#f59e0b}
+    .mc6 .mi-ico{background:rgba(139,92,246,0.08)}.mc6 .mi-ico svg{stroke:#8b5cf6}
+    .mc7 .mi-ico{background:rgba(249,115,22,0.08)}.mc7 .mi-ico svg{stroke:#f97316}
+    .mc8 .mi-ico{background:rgba(20,184,166,0.08)}.mc8 .mi-ico svg{stroke:#14b8a6}
+    .sp { height: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="screen active" id="home">
+  <div class="sbar"><span>14:32</span><div class="sbar-r"><svg viewBox="0 0 24 14"><path d="M1 7l2 1.5c3.5-3.5 9.5-3.5 13 0L18 7C13.5 3 5.5 3 1 7zm5 4l3 3 3-3c-1.7-1.7-4.3-1.7-6 0z"/></svg><svg viewBox="0 0 28 14"><rect x="0" y="1" width="22" height="12" rx="3" stroke="var(--text)" stroke-width="1.5" fill="none" opacity="0.35"/><rect x="2" y="3" width="14" height="8" rx="1.5" fill="#22c55e"/></svg></div></div>
+  <div class="home-head">
+    <div class="hh-logo"><div class="hh-sq"><span>C</span></div><div class="hh-txt"><div class="t1">Casanis</div><div class="t2">Group</div></div></div>
+    <div class="hh-actions">
+      <div class="hh-btn hh-dot"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+      <div class="hh-btn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+    </div>
+  </div>
+  <div class="hero"><div class="hero-bg"></div><div class="hero-inner"><div class="hero-ey">Bienvenue</div><h1 class="hero-h">L'art de <em>vivre</em><br>a Marbella</h1><div class="hero-loc"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Golden Mile &middot; 5 lieux d'exception</div></div></div>
+  <div class="sec-lbl">Nos etablissements</div>
+  <div class="vgrid">
+    <div class="vi" onclick="go('bistrot')"><div class="vi-img"><img src="https://casanisbistrot.com/wp-content/uploads/2020/03/casanis-bistrot-home-1.jpg" alt=""></div><div class="vi-name">Casanis<br>Bistrot</div><div class="vi-tag">Bistrot</div></div>
+    <div class="vi" onclick="go('plage')"><div class="vi-img"><img src="https://laplagecasanis.com/wp-content/uploads/2025/07/laplagecasanis-reservations-sunset-1.jpg" alt=""></div><div class="vi-name">La Plage<br>Casanis</div><div class="vi-tag">Beach Club</div></div>
+    <div class="vi" onclick="go('mamzel')"><div class="vi-img"><img src="https://mamzelmarbella.com/wp-content/uploads/2024/07/mamzel-marbella-food-17.jpg" alt=""></div><div class="vi-name">Mamzel</div><div class="vi-tag">Dinner Show</div></div>
+  </div>
+  <div style="height:10px"></div>
+  <div class="vgrid">
+    <div class="vi" onclick="go('notablu')"><div class="vi-img"><img src="https://notablu.com/wp-content/uploads/2025/08/ABOUT-NOTABLU-MARBELLA-COCINA-MEDITERRANEA.jpg" alt=""></div><div class="vi-name">Nota Blu</div><div class="vi-tag">Brasserie</div></div>
+    <div class="vi" onclick="go('jade')"><div class="vi-img"><img src="https://lejademarbella.com/wp-content/uploads/2025/10/lejademarbella-ambiente-4.jpg" alt=""></div><div class="vi-name">Le Jade</div><div class="vi-tag">Lounge</div></div>
+    <div class="vi" onclick="go('shop')"><div class="vi-img"><div class="vi-img-placeholder" style="background:linear-gradient(135deg,#f5f0e8,#ebe4d6);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b8944f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div></div><div class="vi-name">Shop</div><div class="vi-tag">Boutique</div></div>
+  </div>
+  <div class="sec-lbl">A decouvrir</div>
+  <div class="fscroll">
+    <div class="fcard" onclick="go('bistrot')"><img src="https://casanisbistrot.com/wp-content/uploads/2020/03/casanis-bistrot-home-2.jpg" alt=""><div class="fcard-over"></div><div class="fcard-c"><div class="fcard-tag">Nouveau</div><div class="fcard-name">Menu Printemps</div><div class="fcard-sub">Casanis Bistrot</div></div></div>
+    <div class="fcard" onclick="go('jade')"><img src="https://lejademarbella.com/wp-content/uploads/2025/10/lejademarbella-ambiente-1.jpg" alt=""><div class="fcard-over"></div><div class="fcard-c"><div class="fcard-tag">Ce weekend</div><div class="fcard-name">DJ Seth Troxler</div><div class="fcard-sub">Le Jade &middot; Samedi 22h</div></div></div>
+    <div class="fcard" onclick="go('plage')"><img src="https://laplagecasanis.com/wp-content/uploads/2025/07/laplagecasanis-reservations-beach-2.jpg" alt=""><div class="fcard-over"></div><div class="fcard-c"><div class="fcard-tag">Saison</div><div class="fcard-name">Sunset Sessions</div><div class="fcard-sub">La Plage Casanis</div></div></div>
+  </div>
+  <div class="sp"></div>
+  <div class="promo"><div class="promo-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="promo-bd"><div class="promo-t">Sunset Session</div><div class="promo-s">Ce samedi &middot; La Plage Casanis</div></div><div class="promo-btn">Reserver</div></div>
+  <div class="sp"></div>
+  <div class="loyalty"><div class="lp"><div class="n">0</div><div class="l">Points</div></div><div class="lsep"></div><div class="linfo"><h4>Programme Fidelite</h4><p>Cumulez des points dans les 5 etablissements</p></div></div>
+  <div style="height:30px"></div>
+</div>
+
+<!-- BISTROT -->
+<div class="screen" id="s-bistrot">
+  <div class="dhead"><img src="https://casanisbistrot.com/wp-content/uploads/2020/03/casanis-bistrot-home-1.jpg" alt=""><div class="dhead-over"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Bistrot francais</div><div class="dhi-name">Casanis Bistrot</div><div class="dhi-sub">Depuis 2003 &middot; Golden Mile</div></div></div>
+  <div class="dbody"><div class="dinfo-row"><div class="dinfo-item"><div class="dinfo-val">4.8</div><div class="dinfo-lbl">Note</div></div><div class="dinfo-item"><div class="dinfo-val">20+</div><div class="dinfo-lbl">Annees</div></div><div class="dinfo-item"><div class="dinfo-val">12-0h</div><div class="dinfo-lbl">Horaires</div></div></div>
+  <div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mi-l">La Carte</div><div class="mi-d">Menu & boissons</div></div>
+    <div class="mi mc2"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mi-l">Reserver</div><div class="mi-d">Table & terrasse</div></div>
+    <div class="mi mc3"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div><div class="mi-l">Plan de salle</div><div class="mi-d">Choisir sa place</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Paiement</div><div class="mi-d">Apple Pay & CB</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="mi-l">Evenements</div><div class="mi-d">Soirees & prives</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="mi-l">Photos</div><div class="mi-d">Galerie & ambiance</div></div>
+    <div class="mi mc7"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mi-l">Avis</div><div class="mi-d">Notes & commentaires</div></div>
+    <div class="mi mc8"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div><div class="mi-l">Infos</div><div class="mi-d">Acces & contact</div></div>
+  </div></div>
+</div>
+
+<!-- PLAGE -->
+<div class="screen" id="s-plage">
+  <div class="dhead"><img src="https://laplagecasanis.com/wp-content/uploads/2025/07/laplagecasanis-reservations-sunset-1.jpg" alt=""><div class="dhead-over"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Beach Club</div><div class="dhi-name">La Plage Casanis</div><div class="dhi-sub">Bord de mer &middot; Elviria</div></div></div>
+  <div class="dbody"><div class="dinfo-row"><div class="dinfo-item"><div class="dinfo-val">4.7</div><div class="dinfo-lbl">Note</div></div><div class="dinfo-item"><div class="dinfo-val">250</div><div class="dinfo-lbl">Places</div></div><div class="dinfo-item"><div class="dinfo-val">10-20h</div><div class="dinfo-lbl">Horaires</div></div></div>
+  <div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mi-l">La Carte</div><div class="mi-d">Menu & cocktails</div></div>
+    <div class="mi mc2"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mi-l">Reserver</div><div class="mi-d">Transats & VIP</div></div>
+    <div class="mi mc3"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div><div class="mi-l">Plan de plage</div><div class="mi-d">Zones & lits balinais</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Paiement</div><div class="mi-d">Apple Pay & CB</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="mi-l">Sunset Sessions</div><div class="mi-d">DJs & events</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="mi-l">Photos</div><div class="mi-d">Galerie</div></div>
+    <div class="mi mc7"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mi-l">Avis</div><div class="mi-d">Notes</div></div>
+    <div class="mi mc8"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div><div class="mi-l">Infos</div><div class="mi-d">Acces & contact</div></div>
+  </div></div>
+</div>
+
+<!-- MAMZEL -->
+<div class="screen" id="s-mamzel">
+  <div class="dhead"><img src="https://mamzelmarbella.com/wp-content/uploads/2024/07/mamzel-marbella-food-17.jpg" alt=""><div class="dhead-over"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Dinner & Show</div><div class="dhi-name">Mamzel</div><div class="dhi-sub">Spectacle & gastronomie</div></div></div>
+  <div class="dbody"><div class="dinfo-row"><div class="dinfo-item"><div class="dinfo-val">4.9</div><div class="dinfo-lbl">Note</div></div><div class="dinfo-item"><div class="dinfo-val">VIP</div><div class="dinfo-lbl">Tables</div></div><div class="dinfo-item"><div class="dinfo-val">20-2h</div><div class="dinfo-lbl">Horaires</div></div></div>
+  <div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mi-l">La Carte</div><div class="mi-d">Menu gastronomique</div></div>
+    <div class="mi mc2"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mi-l">Reserver</div><div class="mi-d">Tables VIP</div></div>
+    <div class="mi mc3"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div><div class="mi-l">Plan de salle</div><div class="mi-d">Choisir sa table</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Billetterie</div><div class="mi-d">Shows & soirees</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="mi-l">Shows</div><div class="mi-d">Programme & artistes</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="mi-l">Photos</div><div class="mi-d">Galerie</div></div>
+    <div class="mi mc7"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mi-l">Avis</div><div class="mi-d">Notes</div></div>
+    <div class="mi mc8"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div><div class="mi-l">Infos</div><div class="mi-d">Acces & contact</div></div>
+  </div></div>
+</div>
+
+<!-- NOTA BLU -->
+<div class="screen" id="s-notablu">
+  <div class="dhead"><img src="https://notablu.com/wp-content/uploads/2025/08/ABOUT-NOTABLU-MARBELLA-COCINA-MEDITERRANEA.jpg" alt=""><div class="dhead-over"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Brasserie</div><div class="dhi-name">Nota Blu</div><div class="dhi-sub">Cuisine mediterraneenne</div></div></div>
+  <div class="dbody"><div class="dinfo-row"><div class="dinfo-item"><div class="dinfo-val">4.7</div><div class="dinfo-lbl">Note</div></div><div class="dinfo-item"><div class="dinfo-val">Chef</div><div class="dinfo-lbl">Fabian</div></div><div class="dinfo-item"><div class="dinfo-val">12-0h</div><div class="dinfo-lbl">Horaires</div></div></div>
+  <div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mi-l">La Carte</div><div class="mi-d">Menu mediterraneen</div></div>
+    <div class="mi mc2"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mi-l">Reserver</div><div class="mi-d">Table & terrasse</div></div>
+    <div class="mi mc3"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div><div class="mi-l">Plan de salle</div><div class="mi-d">Choisir sa place</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Paiement</div><div class="mi-d">Apple Pay & CB</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="mi-l">Evenements</div><div class="mi-d">Soirees privees</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="mi-l">Photos</div><div class="mi-d">Galerie</div></div>
+    <div class="mi mc7"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mi-l">Avis</div><div class="mi-d">Notes</div></div>
+    <div class="mi mc8"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div><div class="mi-l">Infos</div><div class="mi-d">Acces & contact</div></div>
+  </div></div>
+</div>
+
+<!-- LE JADE -->
+<div class="screen" id="s-jade">
+  <div class="dhead"><img src="https://lejademarbella.com/wp-content/uploads/2025/10/lejademarbella-ambiente-4.jpg" alt=""><div class="dhead-over"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Lounge & Club</div><div class="dhi-name">Le Jade</div><div class="dhi-sub">Bar, musique & ambiance</div></div></div>
+  <div class="dbody"><div class="dinfo-row"><div class="dinfo-item"><div class="dinfo-val">4.8</div><div class="dinfo-lbl">Note</div></div><div class="dinfo-item"><div class="dinfo-val">DJs</div><div class="dinfo-lbl">Live</div></div><div class="dinfo-item"><div class="dinfo-val">20-4h</div><div class="dinfo-lbl">Horaires</div></div></div>
+  <div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mi-l">La Carte</div><div class="mi-d">Cocktails & tapas</div></div>
+    <div class="mi mc2"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mi-l">Reserver</div><div class="mi-d">Tables & VIP</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="mi-l">Line-up</div><div class="mi-d">DJs & programmation</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Paiement</div><div class="mi-d">Apple Pay & CB</div></div>
+    <div class="mi mc3"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div><div class="mi-l">Plan</div><div class="mi-d">Zones & tables</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="mi-l">Photos</div><div class="mi-d">Galerie & nuits</div></div>
+    <div class="mi mc7"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mi-l">Avis</div><div class="mi-d">Notes</div></div>
+    <div class="mi mc8"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div><div class="mi-l">Infos</div><div class="mi-d">Acces & contact</div></div>
+  </div></div>
+</div>
+
+<!-- SHOP -->
+<div class="screen" id="s-shop">
+  <div class="dhead"><div class="dhead-gradient" style="background:linear-gradient(135deg,#f5f0e8,#ebe4d6);"></div><div class="dhead-over" style="background:linear-gradient(to top,var(--bg) 0%,transparent 100%);"></div><div class="dhead-top"><div class="back" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div></div><div class="dhead-info"><div class="dhi-tag">Boutique en ligne</div><div class="dhi-name">Shop</div><div class="dhi-sub">Produits exclusifs</div></div></div>
+  <div class="dbody"><div class="mgrid">
+    <div class="mi mc1"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div><div class="mi-l">Tous les produits</div><div class="mi-d">Collection</div></div>
+    <div class="mi mc5"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div><div class="mi-l">Nouveautes</div><div class="mi-d">Derniers arrivages</div></div>
+    <div class="mi mc6"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="mi-l">Coups de coeur</div><div class="mi-d">Selection premium</div></div>
+    <div class="mi mc4"><div class="mi-ico"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="mi-l">Mon panier</div><div class="mi-d">Paiement securise</div></div>
+  </div></div>
+</div>
+
+<nav class="bnav">
+  <div class="bn on" onclick="goHome()"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Accueil</span><div class="bn-dot"></div></div>
+  <div class="bn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Reserver</span></div>
+  <div class="bn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg><span>Fidelite</span></div>
+  <div class="bn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></div>
+</nav>
+
+<script>
+function go(id){document.getElementById('home').classList.remove('active');var s=document.getElementById('s-'+id);if(s){s.scrollTop=0;s.classList.add('active');}}
+function goHome(){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById('home').classList.add('active');}
+</script>
+</body>
+</html>
