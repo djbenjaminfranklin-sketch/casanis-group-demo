@@ -42,6 +42,34 @@
       margin-top: 6px;
     }
 
+    /* Toggle tabs - hidden on desktop */
+    .toggle {
+      display: none;
+      gap: 0;
+      margin: 10px 0 6px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .toggle-btn {
+      padding: 10px 24px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .toggle-btn.active {
+      background: #c9a96e;
+      color: #fff;
+    }
+
     .phones {
       display: flex;
       gap: 40px;
@@ -117,9 +145,21 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Mobile: single phone with toggle */
     @media (max-width: 860px) {
-      .phones { gap: 24px; }
-      .frame { border-radius: 46px; }
+      .toggle { display: flex; }
+      .col-label { display: none; }
+      .phones { gap: 0; }
+      .col { display: none; }
+      .col.active-mobile { display: flex; }
+      .frame {
+        height: calc(100vh - 200px);
+        border-radius: 40px;
+        clip-path: inset(0 round 40px);
+        -webkit-clip-path: inset(0 round 40px);
+      }
+      .header h1 { font-size: 24px; }
+      .header p { font-size: 12px; }
     }
   </style>
 </head>
@@ -130,15 +170,20 @@
     <p>Site web & application mobile</p>
   </div>
 
+  <div class="toggle">
+    <button class="toggle-btn active" onclick="showPhone(0)">Le site</button>
+    <button class="toggle-btn" onclick="showPhone(1)">L'application</button>
+  </div>
+
   <div class="phones">
-    <div class="col">
+    <div class="col active-mobile" id="col-site">
       <div class="col-label">Le site</div>
       <div class="frame">
         <iframe src="https://casanisgroup.eu/fr/holding-dans-le-secteur-du-luxe/" loading="lazy"></iframe>
       </div>
     </div>
 
-    <div class="col">
+    <div class="col" id="col-app">
       <div class="col-label accent">L'application</div>
       <div class="frame light">
         <iframe src="app.html" loading="lazy"></iframe>
@@ -149,6 +194,17 @@
   <div class="footer">
     <p>Proposition par <span class="brand">Spynners Lab</span> &middot; spynnerslab.com</p>
   </div>
+
+  <script>
+    function showPhone(idx) {
+      var cols = document.querySelectorAll('.col');
+      var btns = document.querySelectorAll('.toggle-btn');
+      cols.forEach(function(c) { c.classList.remove('active-mobile'); });
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      cols[idx].classList.add('active-mobile');
+      btns[idx].classList.add('active');
+    }
+  </script>
 
 </body>
 </html>
